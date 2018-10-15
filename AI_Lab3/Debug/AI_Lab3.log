@@ -1,0 +1,28 @@
+﻿  Agent.cpp
+c:\users\john o'grady\desktop\ai_lab3\include\mathhelper.h(31): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\john o'grady\desktop\ai_lab3\include\mathhelper.h(39): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\john o'grady\desktop\ai_lab3\src\agent.cpp(105): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\john o'grady\desktop\ai_lab3\src\agent.cpp(122): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\john o'grady\desktop\ai_lab3\src\agent.cpp(204): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Game.cpp
+c:\users\john o'grady\desktop\ai_lab3\include\mathhelper.h(31): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\john o'grady\desktop\ai_lab3\include\mathhelper.h(39): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\john o'grady\desktop\ai_lab3\src\game.cpp(3): warning C4244: 'initializing': conversion from 'double' to 'sf::Int32', possible loss of data
+c:\users\john o'grady\desktop\ai_lab3\src\game.cpp(6): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  main.cpp
+c:\users\john o'grady\desktop\ai_lab3\include\mathhelper.h(31): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\john o'grady\desktop\ai_lab3\include\mathhelper.h(39): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+  AI_Lab3.vcxproj -> C:\Users\John O'Grady\Desktop\AI_Lab3\Debug\AI_Lab3.exe
