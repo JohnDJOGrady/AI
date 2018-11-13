@@ -1,6 +1,6 @@
 #include <Game.h>
 
-Game::Game() : m_window(sf::VideoMode(1600.f, 900.f), "Flow Field", sf::Style::Default)
+Game::Game() : m_window(sf::VideoMode(900.f, 900.f), "Flow Field", sf::Style::Default)
 {
 	// TODO: Initialize entities
 }
