@@ -1,12 +1,15 @@
 #include <Game.h>
 
-Game::Game() : m_window(sf::VideoMode(900.f, 900.f), "Flow Field", sf::Style::Default)
+Game::Game() : 
+	m_window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Flow Field", sf::Style::Default),
+	m_field(sf::Vector2f(WIN_WIDTH, WIN_HEIGHT))
 {
 	// TODO: Initialize entities
 }
 
 Game::~Game()
 {
+	// nothing. . .
 }
 
 /// <summary>
@@ -51,6 +54,7 @@ void Game::update(float dt)
 void Game::render()
 {
 	m_window.clear();
+	m_field.render(m_window);
 	// TODO: Render Grid
 	m_window.display();
 }
