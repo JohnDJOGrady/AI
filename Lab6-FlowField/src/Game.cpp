@@ -60,6 +60,11 @@ void Game::update(float dt)
 		m_mouseDown = true;
 		m_field.select(sf::Mouse::getPosition(m_window));
 	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && m_mouseDown == false)
+	{
+		m_mouseDown = true;
+		m_field.createObstacle(sf::Mouse::getPosition(m_window));
+	}
 	// TODO: Update the grid in real time
 }
 

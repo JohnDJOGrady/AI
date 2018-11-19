@@ -12,6 +12,7 @@ Node::Node(float x, float y, float w, float h)
 	m_tile.setFillColor(sf::Color::White);
 	m_tile.setOutlineColor(sf::Color::Black);
 	m_tile.setOutlineThickness(2);
+	m_impassable = false;
 
 	m_centre = sf::Vector2f(x + (w / 2), y + (h / 2));
 }
@@ -32,6 +33,14 @@ void Node::render(sf::RenderWindow &window)
 	window.draw(m_lblWeight);
 }
 
+void Node::addNeighbour(Node * neighbour)
+{
+	if (neighbour != nullptr)
+	{
+		m_neighbours.push_back(neighbour);
+	}
+}
+
 void Node::setFont(sf::Font * font)
 {
 	m_font = font;
@@ -43,13 +52,13 @@ void Node::setFont(sf::Font * font)
 void Node::setID(int id)
 {
 	m_id = id;
-	m_lblWeight.setString(std::to_string(m_id));
-	m_lblWeight.setPosition(sf::Vector2f(m_centre.x - m_lblWeight.getLocalBounds().width / 2, m_centre.y - m_lblWeight.getLocalBounds().height / 2)); // center the text on the point
 }
 
-void Node::setWeight(float weight)
+void Node::setWeight(int weight)
 {
 	m_weight = weight;
+	m_lblWeight.setString(std::to_string(m_weight));
+	m_lblWeight.setPosition(sf::Vector2f(m_centre.x - m_lblWeight.getLocalBounds().width / 2, m_centre.y - m_lblWeight.getLocalBounds().height / 2)); // center the text on the point
 }
 
 void Node::setDimensions(sf::Vector2f v)
@@ -62,6 +71,11 @@ void Node::setPos(sf::Vector2f v)
 	m_tile.setPosition(v);
 }
 
+void Node::setFieldPos(int i, int j)
+{
+	m_fieldPos = sf::Vector2f(i, j);
+}
+
 void Node::setFill(sf::Color c)
 {
 	m_tile.setFillColor(c);
@@ -69,6 +83,7 @@ void Node::setFill(sf::Color c)
 
 void Node::setImpasse()
 {
-	setWeight(0);
+	m_impassable = true;
+	setWeight(65535);
 	setFill(sf::Color::Black);
 }

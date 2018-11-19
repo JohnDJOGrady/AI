@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <Node.h>
 #include <iostream>
+#include <list>
+#include <algorithm>
 
 static const int WIDTH = 15;
 static const int HEIGHT = 15;
@@ -16,10 +18,13 @@ public:
 	~Field();
 
 	// algorithm logic
-	void createFlowField(); // Create obstacles
+	void integration();
+	void createFlowField(); // Create vectors
 	void calculateBestPath(); // Djikstra's
+	void assignNeighbours();
 
 	// utility functions
+	void createObstacle(sf::Vector2i mouse);
 	void select(sf::Vector2i mouse);
 	void update(float dt); // update
 	void render(sf::RenderWindow &window); // render the grid of entities
