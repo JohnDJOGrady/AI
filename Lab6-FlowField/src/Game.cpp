@@ -2,7 +2,8 @@
 
 Game::Game() : 
 	m_window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Flow Field", sf::Style::Default),
-	m_field(sf::Vector2f(WIN_WIDTH, WIN_HEIGHT))
+	m_field(sf::Vector2f(WIN_WIDTH, WIN_HEIGHT)),
+	m_mouseDown(false)
 {
 	// TODO: Initialize entities
 }
@@ -29,9 +30,14 @@ void Game::run()
 		sf::Event event;
 		while (m_window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) // close the window if a key is pressed
 			{
+				m_field.cleanup();
 				m_window.close();
+			}
+			if (sf::Event::MouseButtonReleased)
+			{
+				m_mouseDown = false;
 			}
 		}
 
@@ -47,7 +53,13 @@ void Game::run()
 }
 
 void Game::update(float dt)
-{
+{ 
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && m_mouseDown == false)
+	{
+		// left click...
+		m_mouseDown = true;
+		m_field.select(sf::Mouse::getPosition(m_window));
+	}
 	// TODO: Update the grid in real time
 }
 

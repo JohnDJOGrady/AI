@@ -23,7 +23,7 @@ Node::Node(sf::Vector2f pos, sf::Vector2f size)
 
 Node::~Node()
 {
-	// nothing. . .
+	// TODO: cleanup
 }
 
 void Node::render(sf::RenderWindow &window)
@@ -37,7 +37,6 @@ void Node::setFont(sf::Font * font)
 	m_font = font;
 	m_lblWeight.setFont(*m_font);
 	m_lblWeight.setCharacterSize(24);
-	m_lblWeight.setPosition(m_centre);
 	m_lblWeight.setFillColor(sf::Color::Red);
 }
 
@@ -45,6 +44,7 @@ void Node::setID(int id)
 {
 	m_id = id;
 	m_lblWeight.setString(std::to_string(m_id));
+	m_lblWeight.setPosition(sf::Vector2f(m_centre.x - m_lblWeight.getLocalBounds().width / 2, m_centre.y - m_lblWeight.getLocalBounds().height / 2)); // center the text on the point
 }
 
 void Node::setWeight(float weight)
@@ -65,4 +65,10 @@ void Node::setPos(sf::Vector2f v)
 void Node::setFill(sf::Color c)
 {
 	m_tile.setFillColor(c);
+}
+
+void Node::setImpasse()
+{
+	setWeight(0);
+	setFill(sf::Color::Black);
 }

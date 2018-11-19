@@ -122,10 +122,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\Node.cpp" />
     <ClCompile Include="src\Field.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Field.h" />

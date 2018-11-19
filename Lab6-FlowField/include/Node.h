@@ -20,6 +20,7 @@ public:
 	void setDimensions(sf::Vector2f v);
 	void setPos(sf::Vector2f v);
 	void setFill(sf::Color c);
+	void setImpasse();
 
 	// Getters
 	int getID() { return m_id; };

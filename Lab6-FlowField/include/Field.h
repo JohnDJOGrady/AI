@@ -14,16 +14,28 @@ public:
 	Field();
 	Field(sf::Vector2f window);
 	~Field();
+
+	// algorithm logic
 	void createFlowField(); // Create obstacles
 	void calculateBestPath(); // Djikstra's
+
+	// utility functions
+	void select(sf::Vector2i mouse);
 	void update(float dt); // update
 	void render(sf::RenderWindow &window); // render the grid of entities
-
 	void cleanup(); // clean up any elements put on the heap ("new" elements)
 
 private:
 	Node* m_field[WIDTH][HEIGHT];
+	Node* m_start;
+	Node* m_destination;
+
 	sf::Font m_font;
+	sf::Color m_first = sf::Color::Green;
+	sf::Color m_second = sf::Color::Cyan;
+
+	int m_currentSelection = 0;
+	int m_tileH, m_tileW;
 };
 
 #endif // !FIELD_H
