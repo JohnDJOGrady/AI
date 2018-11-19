@@ -7,8 +7,8 @@
 #include <list>
 #include <algorithm>
 
-static const int WIDTH = 15;
-static const int HEIGHT = 15;
+static const int WIDTH = 25;
+static const int HEIGHT = 25;
 
 class Field
 {
@@ -18,10 +18,10 @@ public:
 	~Field();
 
 	// algorithm logic
-	void integration();
+	void assignNeighbours(); // assign neighbours of each node for algo
+	void moddedDijkstra(); // generate cost map
 	void createFlowField(); // Create vectors
-	void calculateBestPath(); // Djikstra's
-	void assignNeighbours();
+	void resetCostField();
 
 	// utility functions
 	void createObstacle(sf::Vector2i mouse);

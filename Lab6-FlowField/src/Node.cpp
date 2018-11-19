@@ -6,10 +6,11 @@ Node::Node()
 
 Node::Node(float x, float y, float w, float h)
 {
+	m_fill = sf::Color(0, 0, 255);
 	m_tile = sf::RectangleShape();
 	m_tile.setSize(sf::Vector2f(w, h));
 	m_tile.setPosition(sf::Vector2f(x, y));
-	m_tile.setFillColor(sf::Color::White);
+	m_tile.setFillColor(m_fill);
 	m_tile.setOutlineColor(sf::Color::Black);
 	m_tile.setOutlineThickness(2);
 	m_impassable = false;
@@ -30,7 +31,10 @@ Node::~Node()
 void Node::render(sf::RenderWindow &window)
 {
 	window.draw(m_tile);
-	window.draw(m_lblWeight);
+	if (!m_impassable)
+	{
+		window.draw(m_lblWeight);
+	}
 }
 
 void Node::addNeighbour(Node * neighbour)
@@ -46,7 +50,7 @@ void Node::setFont(sf::Font * font)
 	m_font = font;
 	m_lblWeight.setFont(*m_font);
 	m_lblWeight.setCharacterSize(24);
-	m_lblWeight.setFillColor(sf::Color::Red);
+	m_lblWeight.setFillColor(sf::Color::White);
 }
 
 void Node::setID(int id)
@@ -78,12 +82,13 @@ void Node::setFieldPos(int i, int j)
 
 void Node::setFill(sf::Color c)
 {
-	m_tile.setFillColor(c);
+	m_fill = c;
+	m_tile.setFillColor(m_fill);
 }
 
 void Node::setImpasse()
 {
 	m_impassable = true;
-	setWeight(65535);
-	setFill(sf::Color::Black);
+	setWeight(INT_MAX);
+	setFill(sf::Color::White);
 }

@@ -12,7 +12,7 @@
 
 
 // custom sizing
-static const float WIN_WIDTH = 1600.f;
+static const float WIN_WIDTH = 2000.f;
 static const float WIN_HEIGHT = 1600.f;
 
 class Game

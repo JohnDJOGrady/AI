@@ -27,12 +27,14 @@ public:
 	// Getters
 	int getID() { return m_id; };
 	int getWeight() { return m_weight; };
+	bool getImpassable() { return m_impassable; };
 	sf::Vector2f getFieldPos() { return m_fieldPos; };
 	std::vector<Node*> getNeighbours() { return m_neighbours; };
 
 private:
 	std::vector<Node*> m_neighbours;
 	sf::RectangleShape m_tile;
+	sf::Color m_fill;
 	sf::Vector2f m_centre;
 	sf::Vector2f m_fieldPos; // relative position within the field
 	sf::Vector2f m_flow; // represents vector
