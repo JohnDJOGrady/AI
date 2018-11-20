@@ -7,8 +7,8 @@
 #include <list>
 #include <algorithm>
 
-static const int WIDTH = 25;
-static const int HEIGHT = 25;
+static const int WIDTH = 50;
+static const int HEIGHT = 50;
 
 class Field
 {
@@ -21,6 +21,7 @@ public:
 	void assignNeighbours(); // assign neighbours of each node for algo
 	void moddedDijkstra(); // generate cost map
 	void createFlowField(); // Create vectors
+	void getBestPath(); // calculate best path to goal from start
 	void resetCostField();
 
 	// utility functions
@@ -36,8 +37,6 @@ private:
 	Node* m_destination;
 
 	sf::Font m_font;
-	sf::Color m_first = sf::Color::Green;
-	sf::Color m_second = sf::Color::Cyan;
 
 	int m_currentSelection = 0;
 	int m_tileH, m_tileW;

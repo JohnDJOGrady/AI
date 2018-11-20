@@ -8,8 +8,8 @@ class Node
 {
 public:
 	Node();
-	Node(float x, float y, float w ,float h);
-	Node(sf::Vector2f pos, sf::Vector2f size);
+	Node(float x, float y, float w ,float h, int weight);
+	Node(sf::Vector2f pos, sf::Vector2f size, int weight);
 	~Node();
 	void render(sf::RenderWindow &window);
 	void addNeighbour(Node* neighbour);
@@ -21,8 +21,10 @@ public:
 	void setDimensions(sf::Vector2f v);
 	void setPos(sf::Vector2f v);
 	void setFieldPos(int i, int j);
-	void setFill(sf::Color c);
+	void setFill();
 	void setImpasse();
+	void setGoal();
+	void setStart();
 
 	// Getters
 	int getID() { return m_id; };
@@ -39,7 +41,7 @@ private:
 	sf::Vector2f m_fieldPos; // relative position within the field
 	sf::Vector2f m_flow; // represents vector
 
-	int m_weight;
+	int m_weight, m_maxWeight;
 	sf::Text m_lblWeight; // label for the node weight
 	sf::Font* m_font;
 

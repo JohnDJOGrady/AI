@@ -2,7 +2,7 @@
 
 Game::Game() : 
 	m_window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Flow Field", sf::Style::Default),
-	m_field(sf::Vector2f(WIN_WIDTH, WIN_HEIGHT)),
+	m_field(sf::Vector2f(WIN_WIDTH - 400, WIN_HEIGHT)),
 	m_mouseDown(false)
 {
 	// TODO: Initialize entities
@@ -62,6 +62,7 @@ void Game::update(float dt)
 	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && m_mouseDown == false)
 	{
+		// right click...
 		m_mouseDown = true;
 		m_field.createObstacle(sf::Mouse::getPosition(m_window));
 	}
