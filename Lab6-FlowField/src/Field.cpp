@@ -24,7 +24,6 @@ Field::Field(sf::Vector2f window)
 			float y = i * m_tileH;
 			int weight = HEIGHT * WIDTH;
 			m_field[i][j] = new Node(x,y, m_tileW, m_tileH, weight);
-			m_field[i][j]->setFieldPos(i, j);
 			m_field[i][j]->setFont(&m_font);
 			m_field[i][j]->setID(nodeID);
 			nodeID++;
@@ -82,7 +81,12 @@ void Field::moddedDijkstra()
 
 void Field::createFlowField()
 {
-	
+	int topN = 0;
+	int bottomN = 0;
+	int leftN = 0;
+	int rightN = 0;
+
+
 }
 
 void Field::resetCostField()
