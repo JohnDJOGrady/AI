@@ -75,19 +75,24 @@ void Node::setFill()
 {
 	if (!m_impassable )
 	{
-		float g = (float)m_maxWeight / 255.f * (float)m_weight / 2;
-		float b = (float)m_maxWeight / 255.f * (float)m_weight / 2;
+		float r = 225.f - m_weight;
+		float g = 255.f;
+		float b = 125.f - m_weight;
 
-		if (g > 255.f)
+		if (r < 0.f)
 		{
-			g = 255.f;
+			r = 0.f;
 		}
-		if (b > 200.f)
+		if (g < 0.f)
 		{
-			b = 200.f;
+			g = 0.f;
+		}
+		if (b < 0.f)
+		{
+			b = 0.f;
 		}
 
-		m_fill = sf::Color(0,g,b);
+		m_fill = sf::Color(r,g,b);
 		m_tile.setFillColor(m_fill);
 	}
 	else
