@@ -72,7 +72,7 @@ void Field::moddedDijkstra()
 				}
 			}
 		}
-
+		createFlowField();
 		// calculating efficieny
 		sf::Time elapsed = clock.getElapsedTime();
 		std::cout << elapsed.asMilliseconds() << std::endl;
@@ -81,12 +81,62 @@ void Field::moddedDijkstra()
 
 void Field::createFlowField()
 {
-	int topN = 0;
-	int bottomN = 0;
-	int leftN = 0;
-	int rightN = 0;
+	for (int i = 0; i < HEIGHT; i++)
+	{
+		for (int j = 0; j < WIDTH; j++)
+		{
+			Node* n = m_field[i][j];
+			if (n->getWeight() != 0 && !n->getImpassable())
+			{
+				int topN = n->getWeight();
+				int bottomN = n->getWeight();
+				int leftN = n->getWeight();
+				int rightN = n->getWeight();
 
+				if (i < HEIGHT - 1)
+				{
+					Node* bottom = m_field[i + 1][j];
+					if(!bottom->getImpassable())
+					{
+						bottomN = bottom->getWeight();
+					}
+				}
+				if (i > 0)
+				{
+					Node* top = m_field[i - 1][j];
+					if (!top->getImpassable())
+					{
+						topN = top->getWeight();
+					}
+				}
+				if (j < WIDTH - 1)
+				{
+					Node* right = m_field[i][j + 1];
+					if (!right->getImpassable())
+					{
+						rightN = right->getWeight();
+					}
+				}
+				if (j > 0)
+				{
+					Node* left = m_field[i][j - 1];
+					if (!left->getImpassable())
+					{
+						leftN = left->getWeight();
+					}
+				}
 
+				float x = leftN - rightN;
+				float y = topN - bottomN;
+				float mag = (x * x) + (y * y);
+				n->setFlow(sf::Vector2f(x / mag, y / mag));
+			}
+			else
+			{
+				n->setFlow(sf::Vector2f(0,0));
+			}
+		}
+	}
 }
 
 void Field::resetCostField()

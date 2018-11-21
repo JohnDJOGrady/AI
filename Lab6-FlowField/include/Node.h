@@ -21,6 +21,7 @@ public:
 	void setImpasse();
 	void setGoal();
 	void setStart();
+	void setFlow(sf::Vector2f v);
 
 	// Getters
 	int getID() { return m_id; };

@@ -75,9 +75,9 @@ void Node::setFill()
 {
 	if (!m_impassable )
 	{
-		float r = 225.f - m_weight;
+		float r = 225.f - m_weight / 2;
 		float g = 255.f;
-		float b = 125.f - m_weight;
+		float b = 255.f - m_weight;
 
 		if (r < 0.f)
 		{
@@ -119,4 +119,9 @@ void Node::setStart()
 {
 	m_fill = sf::Color::Cyan;
 	setFill();
+}
+
+void Node::setFlow(sf::Vector2f v)
+{
+	m_flow = v + m_centre;
 }
