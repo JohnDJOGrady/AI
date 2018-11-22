@@ -86,17 +86,16 @@ void Field::createFlowField()
 		for (int j = 0; j < WIDTH; j++)
 		{
 			Node* n = m_field[i][j];
-			if (n->getWeight() != 0 && !n->getImpassable())
+			if (!n->getImpassable() && n->getWeight() != 0)
 			{
 				int topN = n->getWeight();
 				int bottomN = n->getWeight();
 				int leftN = n->getWeight();
 				int rightN = n->getWeight();
-
 				if (i < HEIGHT - 1)
 				{
 					Node* bottom = m_field[i + 1][j];
-					if(!bottom->getImpassable())
+					if (!bottom->getImpassable())
 					{
 						bottomN = bottom->getWeight();
 					}
@@ -139,18 +138,95 @@ void Field::createFlowField()
 	}
 }
 
+void Field::getBestPath()
+{
+	std::list<Node*> nodeList;
+	nodeList.push_back(m_start);
+
+	while (nodeList.size() > 0 && nodeList.front() != m_destination)
+	{
+		Node* node = nodeList.front();
+		if (node != m_start)
+		{
+			node->setPath();
+		}
+		nodeList.pop_front();
+		sf::Vector2f nodeFlow = node->getFlow();
+		sf::Vector2f gridPos = getGridPosition(node);
+		std::cout << node->getID() << std::endl;
+		int x = gridPos.x;
+		int y = gridPos.y;
+		if (nodeFlow.x > 0.f)
+		{
+			x = gridPos.x + 1;
+			if (m_field[y][x]->getImpassable())
+			{
+				x = gridPos.x;
+			}
+
+			if (x > WIDTH)
+			{
+				x = WIDTH;
+			}
+		}
+		else if (nodeFlow.x < 0.f)
+		{
+			x = gridPos.x - 1;
+			if (m_field[y][x]->getImpassable())
+			{
+				x = gridPos.x;
+			}
+			if (x < 0)
+			{
+				x = 0;
+			}
+		}
+
+		if (nodeFlow.y > 0.f)
+		{
+			y = gridPos.y + 1;
+			if (m_field[y][x]->getImpassable())
+			{
+				y = gridPos.y;
+			}
+			if (y > HEIGHT - 1)
+			{
+				y = HEIGHT - 1;
+			}
+		}
+		else if (nodeFlow.y < 0.f)
+		{
+			y = gridPos.y - 1;
+			if (m_field[y][x]->getImpassable())
+			{
+				y = gridPos.y;
+			}
+			if (y < 0)
+			{
+				y = 0;
+			}
+		}
+
+		nodeList.push_front(m_field[y][x]);
+	}
+}
+
 void Field::resetCostField()
 {
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		for (int j = 0; j < WIDTH; j++)
 		{
+			m_field[i][j]->m_end = false;
+			m_field[i][j]->m_start = false;
+			m_field[i][j]->m_path = false;
 			if (m_field[i][j]->getImpassable())
 			{
 				m_field[i][j]->setWeight(INT_MAX);
 			}
 			else
 			{
+				
 				m_field[i][j]->setWeight(HEIGHT * WIDTH);
 			}
 		}
@@ -191,36 +267,34 @@ void Field::assignNeighbours()
 /// </summary>
 void Field::select(sf::Vector2i mouse)
 {
-	if (m_currentSelection < 2)
+	for (int i = 0; i < HEIGHT; i++)
 	{
-		for (int i = 0; i < HEIGHT; i++)
+		//std::cout << "Row: " << i << std::endl;
+		if (mouse.y > i * m_tileH && mouse.y < (i + 1) * m_tileH)
 		{
-			//std::cout << "Row: " << i << std::endl;
-			if (mouse.y > i * m_tileH && mouse.y < (i + 1) * m_tileH)
+			for (int j = 0; j < WIDTH; j++)
 			{
-				for (int j = 0; j < WIDTH; j++)
+				if (mouse.x > j * m_tileW && mouse.x < (j + 1) * m_tileW)
 				{
-					if (mouse.x > j * m_tileW && mouse.x < (j + 1) * m_tileW)
+					if (m_currentSelection == 0)
 					{
-						if (m_currentSelection == 0)
-						{
-							m_field[i][j]->setGoal();
-							m_destination = m_field[i][j];
-							m_currentSelection++;
-							moddedDijkstra();
-						}
-						else if (m_currentSelection == 1)
-						{
-							m_field[i][j]->setStart();
-							m_start = m_field[i][j];
-							m_currentSelection++;
-						}
-						break; // once node selected break out of loop
+						m_field[i][j]->setGoal();
+						m_destination = m_field[i][j];
+						m_currentSelection++;
+						moddedDijkstra();
 					}
-					//std::cout << " Column: " << j << std::endl;
+					else if (m_currentSelection == 1)
+					{
+						m_field[i][j]->setStart();
+						m_start = m_field[i][j];
+						m_currentSelection = 0;
+						getBestPath();
+					}
+					break; // once node selected break out of loop
 				}
-				break; // once node selected break out of loop
+					//std::cout << " Column: " << j << std::endl;
 			}
+			break; // once node selected break out of loop
 		}
 	}
 }
@@ -264,6 +338,11 @@ void Field::render(sf::RenderWindow & window)
 			m_field[i][j]->render(window);
 		}
 	}
+}
+
+sf::Vector2f Field::getGridPosition(Node * node)
+{
+	return sf::Vector2f(node->getPos().x / m_tileW, node->getPos().y / m_tileH);
 }
 
 // TODO: cleanup

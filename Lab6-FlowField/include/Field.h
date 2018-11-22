@@ -6,6 +6,7 @@
 #include <iostream>
 #include <list>
 #include <algorithm>
+#include <math.h>
 
 static const int WIDTH = 50;
 static const int HEIGHT = 50;
@@ -29,6 +30,7 @@ public:
 	void select(sf::Vector2i mouse);
 	void update(float dt); // update
 	void render(sf::RenderWindow &window); // render the grid of entities
+	sf::Vector2f getGridPosition(Node* node);
 	void cleanup(); // clean up any elements put on the heap ("new" elements)
 
 private:

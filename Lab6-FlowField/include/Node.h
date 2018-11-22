@@ -21,13 +21,21 @@ public:
 	void setImpasse();
 	void setGoal();
 	void setStart();
+	void setPath();
 	void setFlow(sf::Vector2f v);
 
 	// Getters
 	int getID() { return m_id; };
+	sf::Vector2f getPos() { return m_tile.getPosition(); };
+	sf::Vector2f getCentre() { return m_centre; };
+	sf::Vector2f getFlow() { return m_flow; };
 	int getWeight() { return m_weight; };
 	bool getImpassable() { return m_impassable; };
 	std::vector<Node*> getNeighbours() { return m_neighbours; };
+
+	bool m_start;
+	bool m_end;
+	bool m_path;
 
 private:
 	std::vector<Node*> m_neighbours;

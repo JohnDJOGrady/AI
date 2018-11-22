@@ -15,8 +15,10 @@ Node::Node(float x, float y, float w, float h, int weight)
 	m_impassable = false;
 	m_maxWeight = weight;
 	setFill();
+
 	m_centre = sf::Vector2f(x + (w / 2), y + (h / 2));
-	m_flow = m_centre - sf::Vector2f(w / 3,h / 3);
+
+	m_flow = sf::Vector2f(0,0);
 }
 
 Node::~Node()
@@ -33,7 +35,7 @@ void Node::render(sf::RenderWindow &window)
 		sf::Vertex line[] =
 		{
 			sf::Vertex(m_centre, sf::Color::Red),
-			sf::Vertex(m_flow, sf::Color::Red)
+			sf::Vertex(sf::Vector2f(m_centre.x + (m_flow.x * (m_tile.getSize().x / 2)), m_centre.y + (m_flow.y * (m_tile.getSize().y / 2))),  sf::Color::Red)
 		};
 		window.draw(line, 2, sf::Lines);
 		window.draw(m_lblWeight);
@@ -60,20 +62,24 @@ void Node::setFont(sf::Font * font)
 void Node::setID(int id)
 {
 	m_id = id;
+
+	m_lblWeight.setString(std::to_string(m_id));
+	m_lblWeight.setPosition(m_tile.getPosition().x, m_tile.getPosition().y);
 }
 
 void Node::setWeight(int weight)
 {
 	m_weight = weight;
-	setFill();
-	m_lblWeight.setString(std::to_string(m_weight));
-	m_lblWeight.setPosition(m_tile.getPosition().x, m_tile.getPosition().y);
+	if (!m_end && !m_start)
+	{
+		setFill();
+	}
 	//m_lblWeight.setPosition(sf::Vector2f(m_centre.x - m_lblWeight.getLocalBounds().width / 2, m_centre.y - m_lblWeight.getLocalBounds().height / 2)); // center the text on the point
 }
 
 void Node::setFill()
 {
-	if (!m_impassable )
+	if (!m_impassable && !m_path && !m_end && !m_start)
 	{
 		float r = 225.f - m_weight / 2;
 		float g = 255.f;
@@ -111,17 +117,26 @@ void Node::setImpasse()
 
 void Node::setGoal()
 {
-	m_fill = sf::Color::Green;
+	m_end = true;
+	m_fill = sf::Color::Magenta;
 	setFill();
 }
 
 void Node::setStart()
 {
+	m_start = true;
 	m_fill = sf::Color::Cyan;
+	setFill();
+}
+
+void Node::setPath()
+{
+	m_path = true;
+	m_fill = sf::Color::Yellow;
 	setFill();
 }
 
 void Node::setFlow(sf::Vector2f v)
 {
-	m_flow = v + m_centre;
+	m_flow = sf::Vector2f(v);
 }
