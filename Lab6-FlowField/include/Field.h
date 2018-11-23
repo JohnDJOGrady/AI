@@ -28,10 +28,8 @@ public:
 	// utility functions
 	void createObstacle(sf::Vector2i mouse);
 	void select(sf::Vector2i mouse);
-	void update(float dt); // update
 	void render(sf::RenderWindow &window); // render the grid of entities
-	sf::Vector2f getGridPosition(Node* node);
-	void cleanup(); // clean up any elements put on the heap ("new" elements)
+	sf::Vector2f getFieldPos(Node* node); 
 
 private:
 	Node* m_field[WIDTH][HEIGHT];
@@ -40,7 +38,7 @@ private:
 
 	sf::Font m_font;
 
-	int m_currentSelection = 0;
+	int m_currentSelection = 0; // differentiate the left mouse clicks
 	int m_tileH, m_tileW;
 };
 

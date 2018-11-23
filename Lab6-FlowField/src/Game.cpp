@@ -2,7 +2,7 @@
 
 Game::Game() : 
 	m_window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Flow Field", sf::Style::Default),
-	m_field(sf::Vector2f(WIN_WIDTH - 400, WIN_HEIGHT)),
+	m_field(sf::Vector2f(WIN_WIDTH, WIN_HEIGHT)),
 	m_mouseDown(false)
 {
 	// TODO: Initialize entities
@@ -25,6 +25,10 @@ void Game::run()
 	const sf::Time frameRate = sf::seconds(1.0f / 60.0f);
 	timeSinceLastUpdate = clock.restart();
 
+	std::cout << "Right click to create and obstacle." << std::endl;
+	std::cout << "Left click to create the goal node and left click again to create the starting point. This resets." << std::endl << std::endl;
+
+
 	while (m_window.isOpen())
 	{
 		sf::Event event;
@@ -32,7 +36,6 @@ void Game::run()
 		{
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) // close the window if a key is pressed
 			{
-				m_field.cleanup();
 				m_window.close();
 			}
 			if (sf::Event::MouseButtonReleased)
@@ -66,13 +69,11 @@ void Game::update(float dt)
 		m_mouseDown = true;
 		m_field.createObstacle(sf::Mouse::getPosition(m_window));
 	}
-	// TODO: Update the grid in real time
 }
 
 void Game::render()
 {
 	m_window.clear();
 	m_field.render(m_window);
-	// TODO: Render Grid
 	m_window.display();
 }

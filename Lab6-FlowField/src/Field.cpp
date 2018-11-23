@@ -5,15 +5,19 @@ Field::Field()
 	// default
 }
 
+///<summary>
+/// generate the field
+///</summary>
 Field::Field(sf::Vector2f window)
 {
+
 	if (!m_font.loadFromFile("resources//font//AGENCYR.TTF"))
 	{
 		std::cout << "-- Error loading font file -- " << std::endl;
 	}
 
 	int nodeID = 0;
-	// filling the grid
+	// filling the field with nodes
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		for (int j = 0; j < WIDTH; j++)
@@ -27,7 +31,6 @@ Field::Field(sf::Vector2f window)
 			m_field[i][j]->setFont(&m_font);
 			m_field[i][j]->setID(nodeID);
 			nodeID++;
-			//std::cout << "[Node " << nodeID << "] Row: " << i << " - Column: " << j << " - Weight: " << m_field[i][j]->getWeight() << std::endl;;
 		}
 	}
 
@@ -57,11 +60,11 @@ void Field::moddedDijkstra()
 		{
 			Node* currentID = nodeList.front();
 			nodeList.pop_front();
-			std::vector<Node*> neighbours = currentID->getNeighbours();
+			std::vector<Node*> neighbours = currentID->getNeighbours(); // get the NWSE nodes if applicable
 			for (int i = 0; i < neighbours.size(); i++)
 			{
 				Node* n = neighbours[i];
-				int endNodeCost = currentID->getWeight() + 1;
+				int endNodeCost = currentID->getWeight() + 1; // weight to be plus one of the previous node indicating one step was taken to get there
 				if (n->getWeight() < INT_MAX && endNodeCost < n->getWeight())
 				{
 					if (std::find(nodeList.begin(), nodeList.end(), n) != nodeList.end() == false)
@@ -72,13 +75,23 @@ void Field::moddedDijkstra()
 				}
 			}
 		}
-		createFlowField();
+		createFlowField(); // create vector flow field after integration field complete
 		// calculating efficieny
 		sf::Time elapsed = clock.getElapsedTime();
-		std::cout << elapsed.asMilliseconds() << std::endl;
+		system("CLS");
+
+		
+		std::cout << "Time to create weight and flow in Milliseconds: " << elapsed.asMilliseconds() << std::endl;
 	}
 }
 
+///<summary>
+/// generate a flow field by create a vector based off the value of its neighbouring nodes
+/// Top and bottom represnting the y component while left and right represent the component
+/// if the node you are checking is on the outer edge avoid checking the node either N W S E
+/// depending on its location
+///
+///</summary>
 void Field::createFlowField()
 {
 	for (int i = 0; i < HEIGHT; i++)
@@ -128,7 +141,7 @@ void Field::createFlowField()
 				float x = leftN - rightN;
 				float y = topN - bottomN;
 				float mag = (x * x) + (y * y);
-				n->setFlow(sf::Vector2f(x / mag, y / mag));
+				n->setFlow(sf::Vector2f(x / mag, y / mag)); // get the normalised vector and set it as the direction vector for the flow field
 			}
 			else
 			{
@@ -138,79 +151,90 @@ void Field::createFlowField()
 	}
 }
 
+///<summary>
+/// For each node check the flow direction vector
+///</summary>
 void Field::getBestPath()
 {
 	std::list<Node*> nodeList;
 	nodeList.push_back(m_start);
 
-	while (nodeList.size() > 0 && nodeList.front() != m_destination)
+	while (nodeList.size() > 0 && nodeList.front() != m_destination) // make sure its between the start and destination nodes
 	{
-		Node* node = nodeList.front();
+		Node* node = nodeList.front(); // get the next node in the iteration
 		if (node != m_start)
 		{
 			node->setPath();
 		}
 		nodeList.pop_front();
-		sf::Vector2f nodeFlow = node->getFlow();
-		sf::Vector2f gridPos = getGridPosition(node);
-		std::cout << node->getID() << std::endl;
-		int x = gridPos.x;
-		int y = gridPos.y;
+		sf::Vector2f nodeFlow = node->getFlow(); // get the direction vector which indicates what the next node in the flow will be
+		sf::Vector2f fieldPos = getFieldPos(node);
+		int x = fieldPos.x;
+		int y = fieldPos.y;
+
 		if (nodeFlow.x > 0.f)
 		{
-			x = gridPos.x + 1;
-			if (m_field[y][x]->getImpassable())
-			{
-				x = gridPos.x;
-			}
+			x = fieldPos.x + 1;
 
-			if (x > WIDTH)
+			if (x > WIDTH - 1)
 			{
-				x = WIDTH;
+				x = WIDTH - 1; // edge detection
+			}
+			if (m_field[y][x]->getImpassable()) // avoid following the flow in to obstacles
+			{
+				x = fieldPos.x;
 			}
 		}
 		else if (nodeFlow.x < 0.f)
 		{
-			x = gridPos.x - 1;
-			if (m_field[y][x]->getImpassable())
-			{
-				x = gridPos.x;
-			}
+			x = fieldPos.x - 1;
 			if (x < 0)
 			{
 				x = 0;
+			}
+			if (m_field[y][x]->getImpassable())
+			{
+				x = fieldPos.x;
 			}
 		}
 
 		if (nodeFlow.y > 0.f)
 		{
-			y = gridPos.y + 1;
-			if (m_field[y][x]->getImpassable())
-			{
-				y = gridPos.y;
-			}
+			y = fieldPos.y + 1;
+
 			if (y > HEIGHT - 1)
 			{
 				y = HEIGHT - 1;
 			}
+			if (m_field[y][x]->getImpassable())
+			{
+				y = fieldPos.y;
+			}
 		}
 		else if (nodeFlow.y < 0.f)
 		{
-			y = gridPos.y - 1;
-			if (m_field[y][x]->getImpassable())
-			{
-				y = gridPos.y;
-			}
+			y = fieldPos.y - 1;
+
 			if (y < 0)
 			{
 				y = 0;
 			}
+			if (m_field[y][x]->getImpassable())
+			{
+				y = fieldPos.y;
+			}
 		}
 
-		nodeList.push_front(m_field[y][x]);
+		nodeList.push_front(m_field[y][x]); // push the next node in the flow field to the front of the list
+											// NOTE: due to the loop and the structure of 2d arrays 
+											// where the first element represents a "row" and the second a "column"
+											// the y component establishes its row location and the x its column location
 	}
 }
 
+///<summary>
+/// reset the values of eaach node
+///</summary>
 void Field::resetCostField()
 {
 	for (int i = 0; i < HEIGHT; i++)
@@ -233,6 +257,10 @@ void Field::resetCostField()
 	}
 }
 
+///<summary>
+/// cycle through each node and check its N, W, S, E neighbours and check if they
+/// are valid and add them to the Node's neighbour vector 
+///</summary>
 void Field::assignNeighbours()
 {
 	for (int i = 0; i < HEIGHT; i++)
@@ -241,24 +269,22 @@ void Field::assignNeighbours()
 		{
 			if (i - 1 >= 0)
 			{
-				m_field[i][j]->addNeighbour(m_field[i - 1][j]); // top
+				m_field[i][j]->addNeighbour(m_field[i - 1][j]); // North
 			}
 			if (i + 1 < HEIGHT)
 			{
-				m_field[i][j]->addNeighbour(m_field[i + 1][j]); // bottom
+				m_field[i][j]->addNeighbour(m_field[i + 1][j]); // South
 			}
 			if (j - 1 >= 0)
 			{
-				m_field[i][j]->addNeighbour(m_field[i][j - 1]); // left
+				m_field[i][j]->addNeighbour(m_field[i][j - 1]); // West
 			}
 			if (j + 1 < WIDTH)
 			{
-				m_field[i][j]->addNeighbour(m_field[i][j + 1]); // right
+				m_field[i][j]->addNeighbour(m_field[i][j + 1]); // East
 			}
 		}
 	}
-
-	// - redone
 }
 
 /// <summary>
@@ -269,7 +295,6 @@ void Field::select(sf::Vector2i mouse)
 {
 	for (int i = 0; i < HEIGHT; i++)
 	{
-		//std::cout << "Row: " << i << std::endl;
 		if (mouse.y > i * m_tileH && mouse.y < (i + 1) * m_tileH)
 		{
 			for (int j = 0; j < WIDTH; j++)
@@ -278,21 +303,20 @@ void Field::select(sf::Vector2i mouse)
 				{
 					if (m_currentSelection == 0)
 					{
-						m_field[i][j]->setGoal();
+						m_field[i][j]->setGoal(); // set this as the destination / goal node
 						m_destination = m_field[i][j];
 						m_currentSelection++;
 						moddedDijkstra();
 					}
 					else if (m_currentSelection == 1)
 					{
-						m_field[i][j]->setStart();
+						m_field[i][j]->setStart(); // set this to be the starting node from 
 						m_start = m_field[i][j];
 						m_currentSelection = 0;
 						getBestPath();
 					}
 					break; // once node selected break out of loop
 				}
-					//std::cout << " Column: " << j << std::endl;
 			}
 			break; // once node selected break out of loop
 		}
@@ -307,7 +331,6 @@ void Field::createObstacle(sf::Vector2i mouse)
 {
 	for (int i = 0; i < HEIGHT; i++)
 	{
-		//std::cout << "Row: " << i << std::endl;
 		if (mouse.y > i * m_tileH && mouse.y < (i + 1) * m_tileH)
 		{
 			for (int j = 0; j < WIDTH; j++)
@@ -318,17 +341,15 @@ void Field::createObstacle(sf::Vector2i mouse)
 					moddedDijkstra();
 					break; // once node selected break out of loop
 				}
-				//std::cout << " Column: " << j << std::endl;
 			}
 			break; // once node selected break out of loop
 		}
 	}
 }
 
-void Field::update(float dt)
-{
-}
-
+///<summary>
+/// render each node passing it a reference to the window
+///</summary>
 void Field::render(sf::RenderWindow & window)
 {
 	for (int i = 0; i < HEIGHT; i++)
@@ -340,12 +361,10 @@ void Field::render(sf::RenderWindow & window)
 	}
 }
 
-sf::Vector2f Field::getGridPosition(Node * node)
+///<summary>
+/// translate the nodes window co-ordinates in to a location in the array grid
+///</summary>
+sf::Vector2f Field::getFieldPos(Node * node)
 {
 	return sf::Vector2f(node->getPos().x / m_tileW, node->getPos().y / m_tileH);
-}
-
-// TODO: cleanup
-void Field::cleanup()
-{
 }

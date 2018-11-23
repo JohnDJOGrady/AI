@@ -5,15 +5,9 @@
 #include <SFML/Window.hpp>
 #include <Field.h>
 
-// fill to size of monitor
-// static const float WIN_WIDTH = sf::VideoMode::getDesktopMode().width;
-// static const float WIN_HEIGHT = sf::VideoMode::getDesktopMode().height;
-
-
-
-// custom sizing
-static const float WIN_WIDTH = 2400.f;
-static const float WIN_HEIGHT = 2000.f;
+// custom sizing for the window
+static const float WIN_WIDTH = 1600.f;
+static const float WIN_HEIGHT = 900.f;
 
 class Game
 {
